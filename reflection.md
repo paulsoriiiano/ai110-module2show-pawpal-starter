@@ -32,6 +32,10 @@
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
 
+Yes, I made some changes. There were a few missing relationships and logic bottlenecks:
+1. Define task priority as `Enum`: makes tasks sortable by priority
+2. Add `plan` attribute to `Owner`: connects owner to their active plan
+
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
