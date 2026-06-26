@@ -7,6 +7,26 @@
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+1. Owner/User:
+    - Attributes
+        - Username
+        - Name
+        - owns pet(s) (weak has-a relationship)
+    - Actions
+        - add a pet
+        - add task
+        - see today's tasks
+2. Pet
+    - Attributes
+        - Name
+        - Type/Breed (dog, cat, fish, etc.)
+        - has task(s) (weak has-a relationship)
+3. Task
+    - Duration
+    - Priority
+4. Plan
+    - organizes tasks (consists-of relationship)
+
 **b. Design changes**
 
 - Did your design change during implementation?

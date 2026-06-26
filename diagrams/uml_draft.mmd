@@ -1,0 +1,30 @@
+classDiagram
+    class Owner {
+        +String username
+        +String name
+        +addPet(pet: Pet) void
+        +addTask(pet: Pet, task: Task) void
+        +seeTodaysTasks() List~Task~
+    }
+
+    class Pet {
+        +String name
+        +String type
+        +String breed
+    }
+
+    class Task {
+        +String name
+        +int duration
+        +String priority
+    }
+
+    class Plan {
+        +String date
+        +generatePlan() void
+        +explainPlan() String
+    }
+
+    Owner "1" o-- "0..*" Pet : owns
+    Pet "1" o-- "0..*" Task : has
+    Plan "1" *-- "1..*" Task : organizes
