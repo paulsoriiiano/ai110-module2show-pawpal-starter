@@ -63,10 +63,15 @@ The Scheduler logic for detecting conflicts is by grouping tasks by start time a
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+I used AI as a brainstorming, planning, implementing, and debugging partner.
+The most useful prompts are the ones that are direct and explicit. I told the AI what to do and what not to do (e.g., saying "Plan out" to avoid the AI making immediate changes and instead just plan first)
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+The AI suggested to use a hashmap for the detecting conflicts, but I wasn't too sure how that was going to work. I then re-prompted the AI to evaluate its own response and it eventually gave a better algorithmic method.
 
 ---
 
@@ -77,10 +82,15 @@ The Scheduler logic for detecting conflicts is by grouping tasks by start time a
 - What behaviors did you test?
 - Why were these tests important?
 
+I tested the sorting and conflict detection algorithms. These are the core algorithms of the application, so I figured they should be tested more extensively.
+
+
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
+
+I am maybe 70% confident my scheduler works. I know there are some edge cases that needs to be handled: invalid inputs, duplicate tasks, better conflict detection algorithm.
 
 ---
 
@@ -89,11 +99,15 @@ The Scheduler logic for detecting conflicts is by grouping tasks by start time a
 **a. What went well**
 
 - What part of this project are you most satisfied with?
+I am satisfied with completing a solid version of an application in a matter of hours, with the help of AI tools.
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
+I would manage my time better; this project took me longer than expected.
 
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+AI is a very helpful tool or assistant, but much of the decision-making process still requires human validation.

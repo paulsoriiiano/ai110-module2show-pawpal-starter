@@ -1,0 +1,59 @@
+classDiagram
+    class Owner {
+        +String username
+        +String name
+        +List~Pet~ pets
+        +Scheduler scheduler
+        +addPet(pet: Pet) void
+        +addTask(pet: Pet, task: Task) void
+        +filterTasks(petName: String, completed: bool) List~Task~
+        +seeTodaysTasks() List~Task~
+    }
+
+    class Pet {
+        +String name
+        +String type
+        +String breed
+        +List~Task~ tasks
+        +addTask(task: Task) void
+        +getPendingTasks() List~Task~
+    }
+
+    class Task {
+        +String name
+        +int duration
+        +Priority priority
+        +Pet pet
+        +String scheduledTime
+        +String frequency
+        +bool completed
+        +date dueDate
+        +markComplete() Task
+        +reset() void
+        -spawnNextOccurrence() Task
+    }
+
+    class Priority {
+        <<enumeration>>
+        LOW
+        MEDIUM
+        HIGH
+    }
+
+    class Scheduler {
+        +String date
+        +Owner owner
+        +List~Task~ tasks
+        +List~String~ conflicts
+        +generatePlan() Scheduler
+        +sortByTime(tasks: List~Task~) List~Task~
+        +detectConflicts(tasks: List~Task~) List~String~
+        +explainPlan() String
+    }
+
+    Owner "1" o-- "0..*" Pet : owns
+    Pet "1" o-- "0..*" Task : has
+    Task "0..*" --> "0..1" Pet : back-reference
+    Owner "1" o-- "0..1" Scheduler : builds
+    Scheduler "1" o-- "0..*" Task : organizes
+    Task "0..*" --> "1" Priority : has

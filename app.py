@@ -78,7 +78,8 @@ st.markdown("### Add a Task")
 if not owner.pets:
     st.info("Add a pet before scheduling tasks.")
 else:
-    pet_for_task = st.selectbox("Pet", owner.pets, format_func=lambda p: p.name)
+    pet_name_for_task = st.selectbox("Pet", [p.name for p in owner.pets])
+    pet_for_task = next(p for p in owner.pets if p.name == pet_name_for_task)
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -106,19 +107,24 @@ else:
     pending = owner.see_todays_tasks()
     if pending:
         st.write("Current tasks:")
-        st.table(
-            [
-                {
-                    "pet": t.pet.name if t.pet else "",
-                    "title": t.name,
-                    "duration_minutes": t.duration,
-                    "priority": t.priority.name,
-                    "time": t.scheduled_time,
-                    "frequency": t.frequency,
-                }
-                for t in pending
-            ]
-        )
+        header = st.columns([2, 2, 1, 1, 1, 2, 1])
+        for col, label in zip(header, ["Pet", "Title", "Time", "Priority", "Mins", "Frequency", ""]):
+            col.markdown(f"**{label}**")
+
+        for idx, t in enumerate(pending):
+            row = st.columns([2, 2, 1, 1, 1, 2, 1])
+            row[0].write(t.pet.name if t.pet else "")
+            row[1].write(t.name)
+            row[2].write(t.scheduled_time or "--:--")
+            row[3].write(t.priority.name)
+            row[4].write(t.duration)
+            row[5].write(t.frequency)
+            if t.completed:
+                row[6].success("Done")
+            elif row[6].button("Complete", key=f"complete_{idx}_{id(t)}"):
+                t.mark_complete()
+                st.toast(f"Marked '{t.name}' complete!")
+                st.rerun()
     else:
         st.info("No tasks yet. Add one above.")
 
@@ -132,4 +138,31 @@ if st.button("Generate schedule"):
     st.session_state.scheduler = scheduler
 
 if "scheduler" in st.session_state:
-    st.code(st.session_state.scheduler.explain_plan())
+    scheduler: Scheduler = st.session_state.scheduler
+
+    if scheduler.conflicts:
+        for warning in scheduler.conflicts:
+            st.warning(warning)
+    else:
+        st.success("No scheduling conflicts detected.")
+
+    if scheduler.tasks:
+        st.table(
+            [
+                {
+                    "status": "done" if t.completed else "pending",
+                    "pet": t.pet.name if t.pet else "Unassigned",
+                    "task": t.name,
+                    "time": t.scheduled_time or "--:--",
+                    "priority": t.priority.name,
+                    "duration_min": t.duration,
+                    "frequency": t.frequency,
+                }
+                for t in scheduler.sort_by_time()
+            ]
+        )
+    else:
+        st.info("No tasks scheduled.")
+
+    with st.expander("Plan details"):
+        st.code(scheduler.explain_plan())
