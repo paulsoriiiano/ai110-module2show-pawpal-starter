@@ -21,9 +21,11 @@ class Task:
     completed: bool = False
 
     def mark_complete(self) -> None:
+        """Mark this task as completed."""
         self.completed = True
 
     def reset(self) -> None:
+        """Mark this task as not completed."""
         self.completed = False
 
 
@@ -35,10 +37,12 @@ class Pet:
     tasks: List[Task] = field(default_factory=list)
 
     def add_task(self, task: Task) -> None:
+        """Attach a task to this pet."""
         task.pet = self
         self.tasks.append(task)
 
     def get_pending_tasks(self) -> List[Task]:
+        """Return this pet's tasks that are not yet completed."""
         return [t for t in self.tasks if not t.completed]
 
 
@@ -50,12 +54,15 @@ class Owner:
     scheduler: Optional[Scheduler] = None
 
     def add_pet(self, pet: Pet) -> None:
+        """Add a pet to this owner's list of pets."""
         self.pets.append(pet)
 
     def add_task(self, pet: Pet, task: Task) -> None:
+        """Add a task to the given pet."""
         pet.add_task(task)
 
     def see_todays_tasks(self) -> List[Task]:
+        """Return all of this owner's pets' tasks, sorted by priority then time."""
         all_tasks = [task for pet in self.pets for task in pet.tasks]
         return sorted(all_tasks, key=lambda t: (
             -t.priority.value,
@@ -70,6 +77,7 @@ class Scheduler:
     tasks: List[Task] = field(default_factory=list)
 
     def generate_plan(self) -> Scheduler:
+        """Build the sorted task plan for this scheduler's owner and date."""
         if not self.owner:
             return self
         all_tasks = [task for pet in self.owner.pets for task in pet.tasks]
@@ -80,6 +88,7 @@ class Scheduler:
         return self
 
     def explain_plan(self) -> str:
+        """Render the generated plan as a human-readable, per-pet table."""
         if not self.tasks:
             return "No tasks scheduled."
 
