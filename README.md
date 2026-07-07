@@ -88,14 +88,12 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
-
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.sort_by_time()` | Sorts tasks chronologically by `scheduled_time` (parsed to minutes-since-midnight internally via `Scheduler._time_key()`). Unscheduled tasks sort last; tasks tied on the same time fall back to priority as a tiebreaker. Called automatically by `generate_plan()`. |
+| Filtering | `Owner.filter_tasks(pet_name=None, completed=None)` | Narrows the owner's full task list by pet name and/or completion status — pass either, both, or neither to get everything. Used by the CLI demo and available to the Streamlit UI for "show me just Buddy's tasks" or "show me what's still pending." |
+| Conflict handling | `Scheduler.detect_conflicts()` | Lightweight check that groups scheduled tasks by exact start time and flags any slot shared by more than one task (same pet or across different pets). Returns a list of warning strings rather than raising — `generate_plan()` stores them in `Scheduler.conflicts`, and `explain_plan()` prints them in a `WARNINGS:` section instead of crashing the program. |
+| Recurring tasks | `Task.mark_complete()` → `Task._spawn_next_occurrence()` | Completing a `"daily"` or `"weekly"` task automatically creates the next occurrence and attaches it to the same pet. The next `due_date` is computed with `timedelta(days=1)` or `timedelta(weeks=1)` (see `RECURRENCE_INTERVALS`) added to the completed task's `due_date`. Non-recurring frequencies (e.g. `"twice daily"`) are left alone — `mark_complete()` just returns `None`. |
 
 ## 📸 Demo Walkthrough
 

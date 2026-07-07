@@ -45,10 +45,14 @@ Yes, I made some changes. There were a few missing relationships and logic bottl
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+The Scheduler only considers time at the moment. The implementation for detecting conflicts is simple, lightweight logic, so it doesn't take into account the priority of a task.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+
+The Scheduler logic for detecting conflicts is by grouping tasks by start time and checking if the start time has 2 or more tasks for it. It doesn't take into account time blocks. That tradeoff is reasonable for the first pass implementation, in my opinion. However, for a more robust and production-ready implementation, it is not enough.
 
 ---
 
