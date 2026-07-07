@@ -74,17 +74,46 @@ Plan for 2026-07-06:
 
 ```bash
 # Run the full test suite:
-pytest
+python -m pytest
+
+# Run with verbose per-test output:
+python -m pytest -v
 
 # Run with coverage:
-pytest --cov
+python -m pytest --cov
 ```
+
+`tests/test_pawpal.py` covers the core scheduling behaviors:
+
+- **Sorting correctness** — tasks come back in chronological order, unscheduled tasks sort last, same-time tasks break ties by priority, and an empty task list doesn't error.
+- **Recurrence logic** — completing a `"daily"` task spawns a next-day occurrence attached to the same pet, while non-recurring frequencies (e.g. `"once"`) spawn nothing.
+- **Conflict detection** — `Scheduler.detect_conflicts()` flags tasks that share an exact time slot and stays silent when times don't collide.
+- **Basic task/pet behavior** — marking a task complete updates its status, and adding a task to a pet updates that pet's task list.
 
 Sample test output:
 
 ```
-# Paste your pytest output here
+============================= test session starts ==============================
+collected 10 items
+
+tests/test_pawpal.py::test_mark_complete_changes_status PASSED           [ 10%]
+tests/test_pawpal.py::test_add_task_increases_pet_task_count PASSED      [ 20%]
+tests/test_pawpal.py::test_sort_by_time_orders_tasks_chronologically PASSED [ 30%]
+tests/test_pawpal.py::test_sort_by_time_puts_unscheduled_tasks_last PASSED [ 40%]
+tests/test_pawpal.py::test_sort_by_time_breaks_ties_by_priority PASSED   [ 50%]
+tests/test_pawpal.py::test_sort_by_time_handles_empty_list PASSED        [ 60%]
+tests/test_pawpal.py::test_mark_complete_on_daily_task_creates_next_day_occurrence PASSED [ 70%]
+tests/test_pawpal.py::test_mark_complete_on_non_recurring_frequency_spawns_nothing PASSED [ 80%]
+tests/test_pawpal.py::test_detect_conflicts_flags_duplicate_times PASSED [ 90%]
+tests/test_pawpal.py::test_detect_conflicts_ignores_distinct_times PASSED [100%]
+
+============================== 10 passed in 0.02s ==============================
 ```
+
+Confidence Level: ★★★☆☆ (3/5)
+
+The core behaviors requested — sorting, recurrence, and conflict detection — are tested and passing (10/10), so I'm confident in the happy paths and the specific edge cases we covered (ties, unscheduled tasks, non-recurring frequencies, empty lists). There are still several edge cases that remain untested.
+
 
 ## 📐 Smarter Scheduling
 
